@@ -26,17 +26,18 @@
     }
 
     #winner {
-      font-size: 3em;
+      font-size: 80px; /* Tăng kích thước chữ */
       margin-top: 20px;
-      color: green;
+      color: red; /* Đổi màu chữ thành đỏ */
       font-weight: bold;
     }
 
     button {
       margin-top: 30px;
+      margin-bottom: 50px; /* Thêm khoảng cách giữa nút và bảng */
       padding: 15px 30px;
       font-size: 1.2em;
-      background-color: #007bff;
+      background-color: #0044ff;
       color: white;
       border: none;
       border-radius: 10px;
@@ -45,7 +46,7 @@
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #838383;
     }
 
     #ting {
@@ -54,19 +55,23 @@
 
     table {
       margin: 0 auto;
-      font-size: 1.2em;
+      font-size: 50px; /* Cỡ chữ lớn hơn */
       border-collapse: collapse;
+      width: 90%; /* Tăng chiều rộng bảng */
+      margin-top: 20px; /* Khoảng cách phía trên bảng */
     }
 
     th,
     td {
-      padding: 10px 20px;
+      padding: 20px 40px; /* Tăng khoảng cách giữa các ô */
       border: 1px solid #ccc;
+      text-align: center; /* Căn giữa nội dung */
     }
 
     th {
-      background-color: #007bff;
+      background-color: #ff0000d0;
       color: white;
+      font-size: 50px; /* Cỡ chữ tiêu đề bảng */
     }
 
     @media (max-width: 768px) {
@@ -93,11 +98,10 @@
 
   <audio id="ting"> <source src="Chuong.WAV" type="audio/wav"></audio>
 
-  <h2>Bảng Xếp Hạng</h2>
   <table id="ranking">
     <thead>
       <tr>
-        <th>#</th>
+        <th>STT</th>
         <th>Tên</th>
         <th>Thời gian</th>
       </tr>
@@ -170,7 +174,7 @@
         });
     }
 
-    setInterval(checkFirstBuzz, 10);
+    setInterval(checkFirstBuzz, 100);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
