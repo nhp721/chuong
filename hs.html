@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bấm Chuông - Học Sinh</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600&display=swap" rel="stylesheet">
+</head>
+
+<body style="text-align:center; margin-top:80px; font-family: 'Lexend', sans-serif;">
+  <h1>BẤM CHUÔNG TRẢ LỜI</h1>
+  <p id="nameDisplay" style="font-size: 20px; margin-bottom: 20px; color: red;"></p> <!-- Thêm màu đỏ -->
+  <button id="btn" onclick="buzz()"
+    style="padding: 30px 60px; font-size: 30px; background-color: orange; border: none; border-radius: 10px;">BẤM
+    CHUÔNG</button>
+  <audio id="ting" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <script>
+    const api_url = 'https://script.google.com/macros/s/AKfycbwiHB6VyQ-UPjFdkSqcxNDQA1KQwu7Sx0pLEpAtNoiT45WDRc-Evwf4Y1FdRoqzqsj4cA/exec'; // Thay bằng URL của Web App
+
+    // Lấy tên từ localStorage hoặc yêu cầu nhập tên
+    let name = localStorage.getItem("nameDisplay");
+    if (!name) {
+      name = prompt("Nhập tên của bạn:");
+      if (!name) {
+        name = "Ẩn Danh"; // Tên mặc định nếu không nhập
+      }
+      localStorage.setItem("nameDisplay", name);
+    }
+
+    // Hiển thị tên khi tải trang
+    window.onload = function () {
+      document.getElementById('nameDisplay').innerText = "Tên: " + name;
+      document.getElementById('btn').disabled = false;
+    };
+
+    function buzz() {
+      // Rung thiết bị
+      if (navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+      // Phát âm thanh
+      document.getElementById("ting").play();
+      // Gửi dữ liệu lên Google Sheets thông qua Web App
+      const url = `${api_url}?ten=${encodeURIComponent(name)}`;
+      fetch(url, { method: "POST" })
+        .then(response => response.text())
+        .then(data => {
+          console.log("Đã gửi dữ liệu:", data);
+        })
+        .catch(error => {
+          console.error("Lỗi khi gửi dữ liệu:", error);
+        });
+    }
+  </script>
+</body>
+
+</html>

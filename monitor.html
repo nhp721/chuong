@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Giám Sát Bấm Chuông</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      text-align: center;
+      margin-top: 50px;
+      font-family: 'Lexend', sans-serif;
+      background-color: #f0f4f8;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      color: #333;
+    }
+
+    #winner {
+      font-size: 3em;
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #ting {
+      display: none;
+    }
+
+    table {
+      margin: 0 auto;
+      font-size: 1.2em;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      #winner {
+        font-size: 2.5em;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>AI BẤM ĐẦU TIÊN?</h1>
+  <div id="winner"></div>
+  <button onclick="resetData()">RESET</button>
+
+  <audio id="ting" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <h2>Bảng Xếp Hạng</h2>
+  <table id="ranking">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tên</th>
+        <th>Thời gian</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const api_url = 'https://script.google.com/macros/s/AKfycbzgNnExw_gqNUH3wr-IWs1yVvZvz0KISolyJfzbq8I8sp2gcJMuTtX0aV8Yv7ialYwgXw/exec';
+    let first = null;
+
+    async function checkFirstBuzz() {
+      try {
+        const response = await fetch(api_url);
+        const data = await response.json();
+
+        if (data.length > 0 && !first) {
+          first = data[0];
+          document.getElementById("winner").innerText = first.ten;
+          document.getElementById("ting").play();
+        }
+
+        updateRanking(data);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    }
+
+    function updateRanking(data) {
+      const tbody = document.querySelector("#ranking tbody");
+      tbody.innerHTML = "";
+
+      data.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        let time = new Date(item.thoiGian);
+        time.setHours(time.getHours() + 7);
+        let timeString = time.toLocaleTimeString('vi-VN', { hour12: false });
+
+        row.innerHTML = `
+      <td style="text-align: center;">${index + 1}</td>
+      <td>${item.ten}</td>
+      <td>${timeString}</td>
+    `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function resetData() {
+      fetch(`${api_url}?action=reset`, { method: "GET" })
+        .then(response => {
+          if (response.ok) {
+            first = null;
+            document.getElementById("winner").innerText = "";
+            document.querySelector("#ranking tbody").innerHTML = "";
+            alert("Đã reset bảng bấm!");
+          } else {
+            alert("Có lỗi khi reset bảng!");
+          }
+        })
+        .catch(error => {
+          console.error("Lỗi khi reset dữ liệu:", error);
+        });
+    }
+
+    setInterval(checkFirstBuzz, 500);
+  </script>
+</body>
+
+</html>
