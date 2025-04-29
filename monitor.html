@@ -118,6 +118,13 @@
           first = data[0];
           document.getElementById("winner").innerText = first.ten;
           document.getElementById("ting").play();
+
+          // Hiệu ứng pháo giấy
+          confetti({
+            particleCount: 600,
+            spread: 700,
+            origin: { y: 0.6 }
+          });
         }
 
         updateRanking(data);
@@ -165,6 +172,7 @@
 
     setInterval(checkFirstBuzz, 100);
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 
 </html>
