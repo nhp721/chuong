@@ -26,15 +26,15 @@
     }
 
     #winner {
-      font-size: 80px; /* Tăng kích thước chữ */
+      font-size: 80px;
       margin-top: 20px;
-      color: red; /* Đổi màu chữ thành đỏ */
+      color: red;
       font-weight: bold;
     }
 
     button {
       margin-top: 30px;
-      margin-bottom: 50px; /* Thêm khoảng cách giữa nút và bảng */
+      margin-bottom: 50px;
       padding: 15px 30px;
       font-size: 1.2em;
       background-color: #0044ff;
@@ -55,23 +55,22 @@
 
     table {
       margin: 0 auto;
-      font-size: 50px; /* Cỡ chữ lớn hơn */
+      font-size: 50px;
       border-collapse: collapse;
-      width: 90%; /* Tăng chiều rộng bảng */
-      margin-top: 20px; /* Khoảng cách phía trên bảng */
+      width: 90%;
+      margin-top: 20px;
     }
 
-    th,
-    td {
-      padding: 20px 40px; /* Tăng khoảng cách giữa các ô */
+    th, td {
+      padding: 20px 40px;
       border: 1px solid #ccc;
-      text-align: center; /* Căn giữa nội dung */
+      text-align: center;
     }
 
     th {
       background-color: #ff0000d0;
       color: white;
-      font-size: 50px; /* Cỡ chữ tiêu đề bảng */
+      font-size: 50px;
     }
 
     @media (max-width: 768px) {
@@ -96,7 +95,7 @@
   <div id="winner"></div>
   <button onclick="resetData()">RESET</button>
 
-  <audio id="ting"> <source src="Chuong.WAV" type="audio/wav"></audio>
+  <audio id="ting"><source src="Chuong.WAV" type="audio/wav"></audio>
 
   <table id="ranking">
     <thead>
@@ -110,7 +109,7 @@
   </table>
 
   <script>
-    const api_url = 'https://script.google.com/macros/s/AKfycbzgNnExw_gqNUH3wr-IWs1yVvZvz0KISolyJfzbq8I8sp2gcJMuTtX0aV8Yv7ialYwgXw/exec';
+    const api_url = 'https://script.google.com/macros/s/AKfycbw6O_zfTzo7B_mZX208bM5dxyZgPwpCcbZD67BEvwy26TnhqGbHhBsWyy6egaLNm3vfgQ/exec';
     let first = null;
 
     async function checkFirstBuzz() {
@@ -123,7 +122,6 @@
           document.getElementById("winner").innerText = first.ten;
           document.getElementById("ting").play();
 
-          // Hiệu ứng pháo giấy
           confetti({
             particleCount: 600,
             spread: 700,
@@ -145,14 +143,19 @@
         const row = document.createElement("tr");
 
         let time = new Date(item.thoiGian);
-        time.setHours(time.getHours() + 7);
-        let timeString = time.toLocaleTimeString('vi-VN', { hour12: false });
+        time.setHours(time.getHours()); // Nếu dữ liệu từ server là UTC
+
+        let timeString =
+          `${time.getHours().toString().padStart(2, '0')}  : ` +
+          `${time.getMinutes().toString().padStart(2, '0')} : ` +
+          `${time.getSeconds().toString().padStart(2, '0')} : ` +
+          `${time.getMilliseconds().toString().padStart(3, '0')} `;
 
         row.innerHTML = `
-      <td style="text-align: center;">${index + 1}</td>
-      <td>${item.ten}</td>
-      <td>${timeString}</td>
-    `;
+          <td style="text-align: center;">${index + 1}</td>
+          <td>${item.ten}</td>
+          <td>${timeString}</td>
+        `;
         tbody.appendChild(row);
       });
     }
