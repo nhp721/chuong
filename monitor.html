@@ -9,60 +9,62 @@
   <style>
     body {
       text-align: center;
-      margin-top: 50px;
+      margin: 0;
       font-family: 'Lexend', sans-serif;
-      background-color: #f0f4f8;
+      background-image: url(./back.jpg);
+      background-size: cover;
+      background-repeat: no-repeat; /* Added to prevent background image from repeating */
+      background-attachment: fixed; /* Added to make the background image fixed */
     }
 
-    h1 {
-      font-size: 2.5em;
-      color: #333;
-      margin-bottom: 20px;
+    .frame {
+      max-width: 1200px;
+      margin: 40px auto;
+      background-color: white;
+      border-radius: 30px;
+      padding: 40px 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     }
 
-    h2 {
-      margin-top: 40px;
+    .header {
+      font-size: 2.8em;
+      font-weight: bold;
       color: #333;
+      margin-bottom: 10px;
     }
 
     #winner {
-      font-size: 80px;
-      margin-top: 20px;
+      font-size: 60px;
       color: red;
       font-weight: bold;
+      margin-bottom: 20px;
     }
 
     button {
-      margin-top: 30px;
-      margin-bottom: 50px;
-      padding: 15px 30px;
-      font-size: 1.2em;
+      padding: 12px 24px;
+      font-size: 18px;
       background-color: #0044ff;
       color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-bottom: 30px;
     }
 
     button:hover {
-      background-color: #838383;
-    }
-
-    #ting {
-      display: none;
+      background-color: #666;
     }
 
     table {
       margin: 0 auto;
-      font-size: 50px;
+      font-size: 30px;
       border-collapse: collapse;
-      width: 90%;
-      margin-top: 20px;
+      width: 100%;
     }
 
-    th, td {
-      padding: 20px 40px;
+    th,
+    td {
+      padding: 15px 20px;
       border: 1px solid #ccc;
       text-align: center;
     }
@@ -70,43 +72,46 @@
     th {
       background-color: #ff0000d0;
       color: white;
-      font-size: 50px;
+      font-size: 28px;
     }
 
     @media (max-width: 768px) {
-      h1 {
+      #winner {
         font-size: 2em;
       }
 
-      #winner {
-        font-size: 2.5em;
+      .header {
+        font-size: 1.5em;
       }
 
-      button {
-        padding: 12px 24px;
-        font-size: 1em;
+      table {
+        font-size: 18px;
       }
     }
   </style>
 </head>
 
 <body>
-  <h1>Trường Ngôi Sao Hoàng Mai</h1>
-  <div id="winner"></div>
-  <button onclick="resetData()">RESET</button>
+  <div class="frame">
+    <div class="header">Trường Ngôi Sao Hoàng Mai</div>
+    <div id="winner"></div>
+    <button onclick="resetData()">RESET</button>
 
-  <audio id="ting"><source src="Chuong.WAV" type="audio/wav"></audio>
+    <audio id="ting">
+      <source src="Chuong.WAV" type="audio/wav">
+    </audio>
 
-  <table id="ranking">
-    <thead>
-      <tr>
-        <th>STT</th>
-        <th>Tên</th>
-        <th>Thời gian</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+    <table id="ranking">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên</th>
+          <th>Thời gian</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
     const api_url = 'https://script.google.com/macros/s/AKfycbw6O_zfTzo7B_mZX208bM5dxyZgPwpCcbZD67BEvwy26TnhqGbHhBsWyy6egaLNm3vfgQ/exec';
@@ -141,18 +146,15 @@
 
       data.forEach((item, index) => {
         const row = document.createElement("tr");
-
         let time = new Date(item.thoiGian);
-        time.setHours(time.getHours()); // Nếu dữ liệu từ server là UTC
-
         let timeString =
-          `${time.getHours().toString().padStart(2, '0')}  : ` +
+          `${time.getHours().toString().padStart(2, '0')} : ` +
           `${time.getMinutes().toString().padStart(2, '0')} : ` +
           `${time.getSeconds().toString().padStart(2, '0')} : ` +
-          `${time.getMilliseconds().toString().padStart(3, '0')} `;
+          `${time.getMilliseconds().toString().padStart(3, '0')}`;
 
         row.innerHTML = `
-          <td style="text-align: center;">${index + 1}</td>
+          <td>${index + 1}</td>
           <td>${item.ten}</td>
           <td>${timeString}</td>
         `;
@@ -177,6 +179,7 @@
         });
     }
 
+    checkFirstBuzz();
     setInterval(checkFirstBuzz, 100);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
