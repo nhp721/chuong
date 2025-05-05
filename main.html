@@ -9,39 +9,37 @@
 
 <body style="text-align:center; margin-top:80px; font-family: 'Lexend', sans-serif;">
   <h1>BẤM CHUÔNG TRẢ LỜI</h1>
-  <p id="nameDisplay" style="font-size: 20px; margin-bottom: 20px; color: red;"></p> <!-- Thêm màu đỏ -->
+  <p id="nameDisplay" style="font-size: 20px; margin-bottom: 20px; color: red;"></p>
   <button id="btn" onclick="buzz()"
     style="padding: 30px 60px; font-size: 30px; background-color: orange; border: none; border-radius: 10px;">BẤM
     CHUÔNG</button>
   <audio id="ting"> <source src="Chuong.WAV" type="audio/wav"></audio>
-  <script>
-    const api_url = 'https://script.google.com/macros/s/AKfycbwiHB6VyQ-UPjFdkSqcxNDQA1KQwu7Sx0pLEpAtNoiT45WDRc-Evwf4Y1FdRoqzqsj4cA/exec'; // Thay bằng URL của Web App
 
-    // Lấy tên từ localStorage hoặc yêu cầu nhập tên
+  <script>
+    const api_url = 'https://script.google.com/macros/s/AKfycbw6O_zfTzo7B_mZX208bM5dxyZgPwpCcbZD67BEvwy26TnhqGbHhBsWyy6egaLNm3vfgQ/exec';
+
     let name = localStorage.getItem("nameDisplay");
     if (!name) {
       name = prompt("Nhập tên của bạn:");
       if (!name) {
-        name = "Ẩn Danh"; // Tên mặc định nếu không nhập
+        name = "Ẩn Danh";
       }
       localStorage.setItem("nameDisplay", name);
     }
 
-    // Hiển thị tên khi tải trang
     window.onload = function () {
       document.getElementById('nameDisplay').innerText = "Tên: " + name;
       document.getElementById('btn').disabled = false;
     };
 
-    function buzz() {
-      // Rung thiết bị
-      if (navigator.vibrate) {
-        navigator.vibrate(200);
-      }
-      // Phát âm thanh
+       function buzz() {
+      if (navigator.vibrate) navigator.vibrate(200);
       document.getElementById("ting").play();
-      // Gửi dữ liệu lên Google Sheets thông qua Web App
-      const url = `${api_url}?ten=${encodeURIComponent(name)}`;
+
+      const now = new Date();
+      const timestamp = now.toISOString(); // thời gian có tích tắc
+
+      const url = `${api_url}?ten=${encodeURIComponent(name)}&thoigian=${encodeURIComponent(timestamp)}`;
       fetch(url, { method: "POST" })
         .then(response => response.text())
         .then(data => {
