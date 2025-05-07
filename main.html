@@ -2,81 +2,93 @@
 <html lang="vi">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Bấm Chuông - Học Sinh</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      text-align: center;
-      margin: 0;
-      font-family: 'Lexend', sans-serif;
-      background-image: url(./back.jpg);
-      background-size: cover;
-      background-repeat: no-repeat;
-      /* Added to prevent background image from repeating */
-      background-attachment: fixed;
-      /* Added to make the background image fixed */
-    }
+    <meta charset="UTF-8">
+    <title>Bấm Chuông - Học Sinh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            font-family: 'Lexend', sans-serif;
+            background-image: url(./back.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
 
-    .frame {
-      max-width: 500px;
-      margin: 40px auto;
-      background-color: white;
-      border-radius: 30px;
-      padding: 40px 20px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-    }
-  </style>
+        .frame {
+            max-width: 500px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 30px;
+            padding: 40px 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 
-
 <body style="text-align:center; margin-top:80px; font-family: 'Lexend', sans-serif;">
-  <div class="frame">
-  <h1>BẤM CHUÔNG TRẢ LỜI</h1>
-  <p id="nameDisplay" style="font-size: 20px; margin-bottom: 20px; color: red;"></p>
-  <button id="btn" onclick="buzz()"
-    style="padding: 30px 60px; font-size: 30px; background-color: orange; border: none; border-radius: 10px;">BẤM
-    CHUÔNG</button>
-  <audio id="ting">
-    <source src="Chuong.WAV" type="audio/wav">
-  </audio>
+    <div class="frame">
+        <h1>BẤM CHUÔNG TRẢ LỜI</h1>
+        <p id="nameDisplay" style="font-size: 20px; margin-bottom: 20px; color: red;"></p>
+        <button id="btn" onclick="buzz()"
+            style="padding: 30px 60px; font-size: 30px; background-color: orange; border: none; border-radius: 10px;">BẤM
+            CHUÔNG</button>
+        <audio id="ting">
+            <source src="Chuong.WAV" type="audio/wav">
+        </audio>
 
-  <script>
-    const api_url = 'https://script.google.com/macros/s/AKfycbw6O_zfTzo7B_mZX208bM5dxyZgPwpCcbZD67BEvwy26TnhqGbHhBsWyy6egaLNm3vfgQ/exec';
+        <script>
+            const api_url = 'https://script.google.com/macros/s/AKfycbw6O_zfTzo7B_mZX208bM5dxyZgPwpCcbZD67BEvwy26TnhqGbHhBsWyy6egaLNm3vfgQ/exec';
 
-    let name = localStorage.getItem("nameDisplay");
-    if (!name) {
-      name = prompt("Nhập tên của bạn:");
-      if (!name) {
-        name = "Ẩn Danh";
-      }
-      localStorage.setItem("nameDisplay", name);
-    }
+            // Biến để lưu tên người dùng
+            let userName = "";
 
-    window.onload = function () {
-      document.getElementById('nameDisplay').innerText = "Tên: " + name;
-      document.getElementById('btn').disabled = false;
-    };
+            // Hàm sẽ chạy khi trang web tải xong
+            window.onload = function () {
+                // Hỏi người dùng nhập tên mỗi lần tải trang
+                userName = prompt("Nhập tên của bạn:");
+                if (!userName) {
+                    // Nếu người dùng không nhập gì hoặc bấm Cancel
+                    userName = "Ẩn Danh";
+                }
 
-    function buzz() {
-      if (navigator.vibrate) navigator.vibrate(200);
-      document.getElementById("ting").play();
+                // Hiển thị tên người dùng trên trang
+                document.getElementById('nameDisplay').innerText = "Tên: " + userName;
 
-      const now = new Date();
-      const timestamp = now.toISOString(); // thời gian có tích tắc
+                // Bật nút bấm chuông
+                document.getElementById('btn').disabled = false;
+            };
 
-      const url = `${api_url}?ten=${encodeURIComponent(name)}&thoigian=${encodeURIComponent(timestamp)}`;
-      fetch(url, { method: "POST" })
-        .then(response => response.text())
-        .then(data => {
-          console.log("Đã gửi dữ liệu:", data);
-        })
-        .catch(error => {
-          console.error("Lỗi khi gửi dữ liệu:", error);
-        });
-    }
-  </script>
-  </div>
+            function buzz() {
+                // Rung thiết bị nếu hỗ trợ (chỉ trên thiết bị di động)
+                if (navigator.vibrate) navigator.vibrate(200);
+
+                // Phát âm thanh chuông
+                document.getElementById("ting").play();
+
+                // Lấy thời gian hiện tại
+                const now = new Date();
+                const timestamp = now.toISOString(); // thời gian có tích tắc
+
+                // Tạo URL để gửi dữ liệu
+                // Sử dụng biến userName đã lấy được khi tải trang
+                const url = `${api_url}?ten=${encodeURIComponent(userName)}&thoigian=${encodeURIComponent(timestamp)}`;
+
+                // Gửi dữ liệu đến Google Apps Script
+                fetch(url, {
+                        method: "POST"
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log("Đã gửi dữ liệu:", data);
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi gửi dữ liệu:", error);
+                    });
+            }
+        </script>
+    </div>
 </body>
 
 </html>
